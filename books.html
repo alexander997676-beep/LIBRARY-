@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>9th Class Digital Library - Enhanced Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- GLOBAL VARIABLES (LIGHT MODE - DEFAULT) --- */
+        :root {
+            /* REFINED COLORS */
+            --primary-color: #7986cb; /* Lighter Indigo */
+            --secondary-color: #66bb6a; /* Vibrant Green */
+            --accent-color: #ffca28; /* Golden Yellow */
+            --dark-color: #1a237e; /* Deep Blue for strong contrast */
+            --light-color: #e8eaf6; /* Lighter background text */
+            --gradient-start: #5c6bc0; /* Modern Blue */
+            --gradient-end: #3f51b5;
+            --nav-height: 75px; 
+            
+            /* ENHANCED TRANSPARENCY & GLASSMORPHISM */
+            --bg-image-url: url('https://i.supaimg.com/5ac1dda6-7833-4be9-80cd-274767ee767e.jpg');
+            --bg-overlay-color: rgba(0, 0, 0, 0.15); /* Slightly darker overlay */
+            --text-color: #263238;
+            --text-color-light: #555;
+            
+            /* INCREASED TRANSPARENCY & BLUR */
+            --card-bg-opacity: rgba(255, 255, 255, 0.75); /* Slighty less transparent (improved legibility) */
+            --nav-bg-opacity: rgba(255, 255, 255, 0.5); /* Highly transparent */
+            --footer-bg-opacity: rgba(38, 50, 56, 0.7); /* More transparent */
+            
+            --footer-text-color: #eceff1;
+            --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.35); /* Deeper shadow for floating effect */
+            --card-border-color: rgba(255, 255, 255, 0.4); /* Subtle white border */
+            
+            /* Filter Button Transparency */
+            --filter-btn-bg: rgba(255, 255, 255, 0.6); 
+            --filter-btn-bg-active: var(--primary-color);
+            --filter-btn-color: var(--dark-color);
+            --filter-btn-color-active: white;
+            --control-bg-opacity: rgba(255, 255, 255, 0.65); 
+
+            /* Loading Spinner */
+            --spinner-color: var(--primary-color);
+            --spinner-overlay: rgba(255, 255, 255, 0.8);
+
+            /* Enhanced Background Pattern */
+            --bg-pattern: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.08) 75%, transparent 75%, transparent);
+            --bg-pattern-size: 100px 100px;
+        }
+
+        /* --- DARK MODE THEME --- */
+        [data-theme="dark"] {
+            /* REFINED DARK MODE GLASS */
+            --bg-overlay-color: rgba(0, 0, 0, 0.65); /* Darker overlay for better contrast */
+            --text-color: #f0f0f0;
+            --text-color-light: #b0bec5;
+            
+            /* INCREASED DARK MODE TRANSPARENCY & BLUR */
+            --card-bg-opacity: rgba(25, 25, 25, 0.75); /* Dark glass */
+            --nav-bg-opacity: rgba(15, 15, 15, 0.6); /* Highly transparent dark nav */
+            --footer-bg-opacity: rgba(10, 10, 10, 0.8); /* Highly transparent dark footer */
+            
+            --footer-text-color: #f5f5f5;
+            --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); /* Deeper shadow */
+            --card-border-color: rgba(255, 255, 255, 0.15); /* Subtle grey border */
+            --primary-color: #9fa8da;
+            --secondary-color: #81c784;
+            
+            /* Filter Button Transparency */
+            --filter-btn-bg: rgba(30, 30, 30, 0.6); 
+            --filter-btn-color: #f5f5f5;
+            --filter-btn-color-active: #263238;
+            --control-bg-opacity: rgba(30, 30, 30, 0.65); 
+
+            /* Loading Spinner */
+            --spinner-color: var(--primary-color);
+            --spinner-overlay: rgba(15, 15, 15, 0.8);
+            
+            /* Enhanced Background Pattern */
+            --bg-pattern: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.05) 75%, transparent 75%, transparent);
+        }
+        
+        /* --- GLOBAL STYLES & ACCESSIBILITY --- */
+        html { scroll-behavior: smooth; scroll-padding-top: var(--nav-height); }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            line-height: 1.6;
+            background: var(--bg-image-url) no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg-overlay-color);
+            background-image: var(--bg-pattern); /* Added Pattern */
+            background-size: var(--bg-pattern-size);
+            z-index: -1;
+            transition: background 0.5s ease;
+        }
+        
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+        ::-webkit-scrollbar-thumb { background-color: var(--primary-color); border-radius: 10px; border: 2px solid rgba(0, 0, 0, 0.1); }
+        ::-webkit-scrollbar-thumb:hover { background-color: var(--gradient-end); }
+
+        /* --- ENHANCED FOCUS VISIBILITY --- */
+        :focus-visible {
+            outline: 3px solid var(--accent-color);
+            outline-offset: 3px;
+            border-radius: 6px;
+            transition: outline 0.2s ease, outline-offset 0.2s ease;
+        }
+        .menu-toggle:focus-visible { outline-offset: 5px; }
+
+
+        /* --- THEME SWITCH STYLES (ENHANCED) --- */
+        .theme-switch-wrapper { display: flex; align-items: center; gap: 8px; }
+        .theme-switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .theme-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(26px); background-color: var(--accent-color); }
+        
+        /* Navigation */
+        #main-nav { 
+            position: sticky; top: 0; left: 0; width: 100%; height: var(--nav-height); 
+            background: var(--nav-bg-opacity); 
+            backdrop-filter: blur(25px); 
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2); 
+            z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 30px; box-sizing: border-box; 
+            border-bottom: 1px solid var(--card-border-color); 
+            transition: background-color 0.3s ease; 
+        }
+        
+        #logo-image { height: 65px; width: auto; display: block; transition: transform 0.3s ease; }
+        #logo-image:hover { transform: scale(1.05); }
+
+        .nav-logo a { display: flex; align-items: center; text-decoration: none; }
+        
+        .nav-links { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; gap: 25px; transition: all 0.3s ease; }
+        .nav-links li a { font-family: 'Montserrat', sans-serif; font-weight: 600; color: var(--text-color); text-decoration: none; font-size: 1em; padding: 8px 12px; border-radius: 8px; transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; }
+        .nav-links li a:hover, .nav-links li a.active-nav { background-color: var(--primary-color); color: white; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+       
+        /* --- MOBILE MENU TOGGLE --- */
+        .menu-toggle {
+            display: none; background: none; border: none; cursor: pointer; padding: 5px; z-index: 1001;
+            width: 30px; height: 30px; position: relative;
+        }
+        .menu-toggle .bar {
+            display: block; width: 100%; height: 3px; background-color: var(--text-color);
+            border-radius: 3px; transition: all 0.35s ease-in-out;
+        }
+        .menu-toggle .bar:nth-of-type(1) { transform-origin: top left; }
+        .menu-toggle .bar:nth-of-type(2) { margin: 6px 0; }
+        .menu-toggle .bar:nth-of-type(3) { transform-origin: bottom left; }
+        .menu-toggle.open .bar:nth-of-type(1) { transform: rotate(45deg) translate(2px, -3px); }
+        .menu-toggle.open .bar:nth-of-type(2) { opacity: 0; transform: translateX(-20px); }
+        .menu-toggle.open .bar:nth-of-type(3) { transform: rotate(-45deg) translate(1px, 4px); }
+
+
+        /* Hero */
+        .hero { 
+            color: white; padding: 80px 20px 70px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6); 
+            position: relative; overflow: hidden; border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 60%, var(--dark-color) 100%);
+            background-size: 200% 200%;
+            animation: gradient-flow 15s ease infinite;
+        }
+        @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        #hero-image { max-width: 90%; width: 550px; height: auto; margin: 0 auto 18px; filter: drop-shadow(8px 8px 15px rgba(0,0,0,0.7)); animation: float-in 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; opacity: 0; }
+        @keyframes float-in { from { opacity: 0; transform: translateY(30px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .hero p { font-family: 'Open Sans', sans-serif; font-size: clamp(1.1em, 3vw, 1.4em); margin-top: 18px; max-width: 950px; margin-left: auto; margin-right: auto; opacity: 0.98; color: var(--light-color); }
+
+        /* --- NEW: QUICK SUBJECTS BAR --- */
+        #quick-subjects {
+            display: flex; justify-content: center; align-items: center; gap: 15px;
+            padding: 15px; background: var(--nav-bg-opacity); backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--card-border-color); box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+        }
+        #quick-subjects.hidden { transform: translateY(-100%); opacity: 0; visibility: hidden; }
+        .quick-subject-link { font-family: 'Montserrat', sans-serif; font-weight: 600; text-decoration: none; color: var(--text-color); padding: 5px 10px; border-radius: 8px; transition: background 0.3s ease, color 0.3s ease; }
+        .quick-subject-link:hover { background-color: var(--primary-color); color: white; }
+        #close-quick-subjects { background: none; border: none; font-size: 1.5em; color: var(--text-color); cursor: pointer; transition: transform 0.3s ease, color 0.3s ease; }
+        #close-quick-subjects:hover { transform: scale(1.2); color: var(--accent-color); }
+
+
+        .container { max-width: 1250px; margin: 50px auto; padding: 0 30px; position: relative; }
+        .section-title { font-family: 'Montserrat', sans-serif; font-size: clamp(2em, 6vw, 3em); color: var(--text-color); margin-bottom: 50px; text-align: center; font-weight: 800; position: relative; text-shadow: 1px 1px 6px rgba(255, 255, 255, 0.9); transition: color 0.3s ease; }
+        .section-title::after { content: ''; position: absolute; left: 50%; bottom: -18px; transform: translateX(-50%); width: 120px; height: 6px; background-color: var(--accent-color); border-radius: 4px; }
+
+        /* Category Filters */
+        .filter-container { display: flex; justify-content: center; gap: 15px; margin: -20px auto 30px; flex-wrap: wrap; }
+        .filter-btn { 
+            padding: 10px 20px; font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 1em; border: none; border-radius: 20px; cursor: pointer; 
+            background-color: var(--filter-btn-bg); 
+            color: var(--filter-btn-color); 
+            backdrop-filter: blur(10px); 
+            transition: all 0.3s ease; 
+            border: 1px solid var(--card-border-color); 
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        .filter-btn:hover { background-color: var(--filter-btn-bg); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+        .filter-btn.active { background-color: var(--filter-btn-bg-active); color: var(--filter-btn-color-active); box-shadow: 0 5px 18px rgba(0, 0, 0, 0.3); transform: scale(1.05); }
+
+        /* Search Bar */
+        .search-container { width: 100%; max-width: 600px; margin: 0 auto 25px; position: relative; }
+        .search-bar { 
+            width: 100%; padding: 15px 25px; font-size: 1.1em; font-family: 'Open Sans', sans-serif; border-radius: 30px; 
+            border: 1px solid var(--card-border-color); 
+            background: var(--card-bg-opacity); 
+            color: var(--text-color); 
+            backdrop-filter: blur(15px); 
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); 
+            transition: all 0.3s ease; outline: none; box-sizing: border-box; 
+        }
+        .search-bar:focus { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); border-color: var(--primary-color); }
+        
+        /* Grid Controls (Sort & Count) and Clear Filters */
+        .controls-wrapper { display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 40px; }
+        .grid-controls { width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; color: var(--text-color); }
+        .sort-container { display: flex; align-items: center; gap: 8px; }
+        .sort-container label { font-weight: 600; font-size: 1em; }
+        .sort-select { 
+            font-family: 'Open Sans', sans-serif; font-size: 1em; padding: 8px 12px; border-radius: 15px; 
+            border: 1px solid var(--card-border-color); 
+            background: var(--control-bg-opacity); 
+            color: var(--text-color); 
+            backdrop-filter: blur(8px); 
+            outline: none; 
+            transition: border-color 0.3s ease;
+        }
+        .sort-select:focus { border-color: var(--primary-color); }
+        .results-count { font-size: 1em; font-weight: 600; color: var(--text-color-light); transition: color 0.3s ease; }
+        
+        .utility-buttons { display: flex; gap: 15px; }
+        .utility-btn {
+            font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.9em; border: none; border-radius: 20px; cursor: pointer; 
+            background-color: var(--filter-btn-bg); color: var(--filter-btn-color); 
+            backdrop-filter: blur(10px); transition: all 0.3s ease; border: 1px solid var(--card-border-color); 
+            padding: 8px 18px; 
+        }
+        .utility-btn:hover { background-color: var(--accent-color); color: var(--dark-color); box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); }
+
+        /* --- LOADING INDICATOR --- */
+        .loading-indicator {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--spinner-overlay);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 50;
+            border-radius: 20px;
+        }
+        .loading-indicator.visible { opacity: 1; visibility: visible; }
+        .spinner {
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top: 6px solid var(--spinner-color);
+            border-radius: 50%;
+            width: 50px; height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Item Grid & Cards */
+        .item-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-bottom: 80px; 
+            perspective: 1500px; transition: opacity 0.3s ease-out, transform 0.3s ease-out; position: relative;
+        }
+        .item-grid.grid-filtering { opacity: 0.5; pointer-events: none; }
+        
+        /* --- NEW: SPOTLIGHT EFFECT --- */
+        .item-grid::before {
+            content: '';
+            position: absolute;
+            top: var(--mouse-y, -150px);
+            left: var(--mouse-x, -150px);
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 60%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            transition: top 0.1s ease-out, left 0.1s ease-out, opacity 0.3s;
+            opacity: 0;
+            z-index: 2;
+        }
+        .item-grid:hover::before { opacity: 1; }
+        
+        .item-card { 
+            background-color: var(--card-bg-opacity); 
+            border-radius: 20px; 
+            box-shadow: var(--card-shadow); 
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.5s ease, background-color 0.3s ease, opacity 0.8s ease-out, transform 0.8s ease-out; 
+            text-decoration: none; 
+            color: var(--dark-color); 
+            display: flex; flex-direction: column; align-items: center; text-align: center; padding: 35px; position: relative; 
+            backdrop-filter: blur(20px); 
+            border: 1px solid var(--card-border-color); 
+            box-shadow: var(--card-shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.2); 
+            transform-style: preserve-3d; opacity: 0; transform: translateY(50px); 
+        }
+        .item-card.is-visible { opacity: 1; transform: translateY(0); }
+        .item-card.is-visible:hover { transform: translateY(-18px) rotateX(4deg) scale(1.05); box-shadow: 0 35px 70px rgba(0, 0, 0, 0.45); }
+        
+        /* NEW: Highlight for Random Item */
+        .item-card.highlight {
+            box-shadow: 0 0 0 4px var(--accent-color), 0 35px 70px rgba(0, 0, 0, 0.45);
+            transform: translateY(-18px) rotateX(4deg) scale(1.08) !important;
+        }
+
+        .item-image-container { width: 100%; max-width: 220px; height: 280px; margin-bottom: 30px; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 10px; transform: translateZ(20px); }
+        .item-image { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); transition: transform 0.4s ease-out; }
+        .item-card.is-visible:hover .item-image { transform: scale(1.08); }
+        .item-title { font-family: 'Montserrat', sans-serif; font-size: 1.8em; font-weight: 800; margin-bottom: 10px; color: var(--primary-color); line-height: 1.2; transform: translateZ(40px); transition: color 0.3s ease; }
+        .item-subtitle { font-size: 1.1em; color: var(--text-color-light); margin-bottom: 25px; transform: translateZ(30px); transition: color 0.3s ease; }
+        .view-button { display: inline-block; background: linear-gradient(45deg, var(--secondary-color), #388e3c); color: white; padding: 16px 40px; border-radius: 40px; text-decoration: none; font-weight: 700; letter-spacing: 0.8px; transition: all 0.3s ease; box-shadow: 0 8px 25px rgba(76, 175, 80, 0.5); position: relative; overflow: hidden; border: none; transform: translateZ(20px); }
+        .view-button:hover { background: linear-gradient(45deg, #388e3c, var(--secondary-color)); transform: translateY(-6px) translateZ(20px); box-shadow: 0 12px 30px rgba(76, 175, 80, 0.7); }
+        
+        footer { 
+            background: var(--footer-bg-opacity); 
+            color: var(--footer-text-color); padding: 50px; font-size: 1em; text-align: center; margin-top: 70px; 
+            backdrop-filter: blur(15px); 
+            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.25); 
+            border-top: 1px solid var(--card-border-color); 
+            transition: background-color 0.3s ease, color 0.3s ease; 
+        }
+        footer p { margin: 0; max-width: 1100px; margin-left: auto; margin-right: auto; opacity: 0.95; }
+        footer .warning { color: var(--accent-color); font-weight: 700; margin-bottom: 20px; font-size: 1.2em; text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
+
+        #back-to-top-btn { position: fixed; bottom: 30px; right: 30px; display: block; width: 50px; height: 50px; background-color: var(--primary-color); color: white; text-align: center; line-height: 50px; font-size: 1.8em; border-radius: 50%; text-decoration: none; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); opacity: 0; visibility: hidden; transform: translateY(20px); transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, background-color 0.3s ease; z-index: 999; }
+        #back-to-top-btn.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        #back-to-top-btn:hover { background-color: var(--gradient-end); }
+
+        /* --- RESPONSIVE STYLES (Mobile Menu Added) --- */
+        @media (max-width: 992px) {
+            .item-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; }
+            .item-card { padding: 30px; } .item-image-container { height: 240px; }
+        }
+        
+        @media (max-width: 768px) {
+            #main-nav { padding: 0 20px; }
+            .nav-links { 
+                position: absolute; top: var(--nav-height); left: 0; width: 100%; 
+                flex-direction: column; background: var(--nav-bg-opacity);
+                backdrop-filter: blur(25px); box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+                padding: 20px 0; transform: translateX(100%);
+                transition: transform 0.4s ease-out; border-top: 1px solid var(--card-border-color);
+            }
+            .nav-links.open { transform: translateX(0); }
+            .nav-links li { width: 90%; text-align: center; }
+            .nav-links li a { display: block; width: 100%; padding: 12px 0; margin: 5px 0; }
+            .menu-toggle { display: block; }
+            .theme-switch-wrapper { margin-top: 15px; margin-bottom: 10px; }
+
+            .hero { padding: 70px 20px 60px; }
+            .section-title { margin-bottom: 40px; }
+            .item-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; }
+            .container { margin: 40px auto; padding: 0 20px; }
+            .grid-controls { max-width: 100%; padding: 0 5px; }
+            #quick-subjects { flex-wrap: wrap; }
+        }
+        @media (max-width: 576px) {
+            #logo-image { height: 55px; } 
+            .hero { padding: 60px 15px 40px; }
+            #hero-image { width: 400px; }
+            .section-title { margin-bottom: 30px; }
+            .filter-container { gap: 8px; } .filter-btn { font-size: 0.85em; padding: 8px 15px; }
+            .item-grid { grid-template-columns: 1fr; gap: 20px; }
+            .item-card { padding: 20px; } .item-image-container { max-width: 180px; height: 220px; margin-bottom: 20px;}
+            .item-title { font-size: 1.4em; } .item-subtitle { font-size: 0.9em; }
+            .view-button { padding: 12px 25px; font-size: 0.9em; }
+            footer { padding: 30px; font-size: 0.85em; } footer .warning { font-size: 1em; }
+            #back-to-top-btn { bottom: 20px; right: 20px; width: 40px; height: 40px; line-height: 40px; font-size: 1.5em;}
+            .grid-controls { flex-direction: column; align-items: stretch; gap: 10px; }
+            .sort-container { justify-content: space-between; }
+            .results-count { text-align: center; }
+            .utility-buttons { justify-content: center; }
+        }
+
+    </style>
+</head>
+<body id="page-top">
+
+    <nav id="main-nav">
+        <div class="nav-logo">
+            <a href="#page-top" aria-label="Navigate to top of the page">
+                <img src="https://i.supaimg.com/91a576a3-50c9-4b5b-b10d-2da1ad396adf.png" alt="9th Class Library Logo" id="logo-image">
+            </a>
+        </div>
+        
+        <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#page-top" class="nav-link-item">Home</a></li>
+            <li><a href="#books-section" id="all-books-link" class="nav-link-item">All Books</a></li>
+            <li><a href="#" id="switch-view-link" class="nav-link-item">Switch to Notes</a></li>
+            <li>
+                <div class="theme-switch-wrapper">
+                    <span aria-hidden="true">☀️</span>
+                    <label class="theme-switch" for="theme-toggle">
+                        <span class="sr-only">Toggle dark mode</span>
+                        <input type="checkbox" id="theme-toggle" />
+                        <span class="slider"></span>
+                    </label>
+                    <span aria-hidden="true">🌙</span>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <header class="hero">
+        <img src="https://i.supaimg.com/91a576a3-50c9-4b5b-b10d-2da1ad396adf.png" alt="The 9th Class Digital Library" id="hero-image">
+        <h1><span class="sr-only">The 9th Class Digital Library</span></h1>
+        <p>Unlock a world of knowledge with our comprehensive collection of 9th-grade study books and notes. Your journey to academic excellence starts here.</p>
+    </header>
+    
+    <div id="quick-subjects" role="navigation" aria-label="Quick subject navigation">
+        <a href="#books-section" class="quick-subject-link" data-category="science">Science</a>
+        <a href="#books-section" class="quick-subject-link" data-category="language">Languages</a>
+        <a href="#books-section" class="quick-subject-link" data-category="social">Social Studies</a>
+        <button id="close-quick-subjects" aria-label="Dismiss quick subjects bar">&times;</button>
+    </div>
+
+    <!-- ========= BOOKS SECTION ========= -->
+    <main class="container" id="books-section" aria-labelledby="section-title-books"> 
+        <h2 class="section-title" id="section-title-books">Explore Your Subjects</h2>
+        
+        <div class="filter-container" role="group" aria-labelledby="filter-group-label-books">
+            <span id="filter-group-label-books" class="sr-only">Filter books by category</span>
+            <button class="filter-btn active" data-category="all" aria-pressed="true">All Subjects</button>
+            <button class="filter-btn" data-category="science" aria-pressed="false">Science</button>
+            <button class="filter-btn" data-category="language" aria-pressed="false">Languages</button>
+            <button class="filter-btn" data-category="social" aria-pressed="false">Social Studies</button>
+        </div>
+
+        <div class="search-container">
+            <label for="search-bar-books" class="sr-only">Search for a book</label>
+            <input type="search" id="search-bar-books" class="search-bar" placeholder="Search for a book (e.g., Biology, Urdu)..." aria-controls="book-grid">
+        </div>
+        
+        <div class="controls-wrapper">
+            <div class="grid-controls">
+                <div class="sort-container">
+                    <label for="sort-select-books">Sort by:</label>
+                    <select id="sort-select-books" class="sort-select">
+                        <option value="default">Default</option>
+                        <option value="a-z">Title (A-Z)</option>
+                        <option value="z-a">Title (Z-A)</option>
+                    </select>
+                </div>
+                <div id="results-count-books" class="results-count" aria-live="polite"></div>
+            </div>
+            
+            <div class="utility-buttons">
+                <button id="random-book-btn" class="utility-btn">🎲 Feeling Lucky?</button>
+                <button id="clear-filters-btn-books" class="utility-btn">Clear Filters & Search</button>
+            </div>
+        </div>
+
+        <div class="item-grid" id="book-grid" role="region" aria-live="polite">
+            <!-- Book cards are dynamically inserted here -->
+        </div>
+        
+        <div id="loading-indicator-books" class="loading-indicator">
+            <div class="spinner" role="status" aria-label="Loading books..."></div>
+        </div>
+        
+        <p id="no-results-books" class="no-results" style="display: none; text-align: center; font-size: 1.2em;">No books found matching your criteria. Try a different search or filter.</p>
+    </main>
+
+    <!-- ========= NOTES SECTION ========= -->
+    <main class="container" id="notes-section" style="display: none;" aria-labelledby="section-title-notes"> 
+        <h2 class="section-title" id="section-title-notes">Explore Chapter Notes</h2>
+        
+        <div class="filter-container" role="group" aria-labelledby="filter-group-label-notes">
+            <span id="filter-group-label-notes" class="sr-only">Filter notes by subject</span>
+            <button class="filter-btn active" data-category="all" aria-pressed="true">All Subjects</button>
+            <button class="filter-btn" data-category="biology" aria-pressed="false">Biology</button>
+            <button class="filter-btn" data-category="chemistry" aria-pressed="false">Chemistry</button>
+            <button class="filter-btn" data-category="physics" aria-pressed="false">Physics</button>
+            <button class="filter-btn" data-category="math" aria-pressed="false">Math</button>
+            <button class="filter-btn" data-category="computer" aria-pressed="false">Computer</button>
+            <button class="filter-btn" data-category="english" aria-pressed="false">English</button>
+            <button class="filter-btn" data-category="urdu" aria-pressed="false">Urdu</button>
+            <button class="filter-btn" data-category="islamiat" aria-pressed="false">Islamiat</button>
+            <button class="filter-btn" data-category="pak-studies" aria-pressed="false">Pak Studies</button>
+        </div>
+
+        <div class="search-container">
+            <label for="search-bar-notes" class="sr-only">Search for notes</label>
+            <input type="search" id="search-bar-notes" class="search-bar" placeholder="Search for notes (e.g., Chapter 1, Atomic)..." aria-controls="notes-grid">
+        </div>
+        
+        <div class="controls-wrapper">
+            <div class="grid-controls">
+                <div class="sort-container">
+                    <label for="sort-select-notes">Sort by:</label>
+                    <select id="sort-select-notes" class="sort-select">
+                        <option value="default">Default</option>
+                        <option value="a-z">Title (A-Z)</option>
+                        <option value="z-a">Title (Z-A)</option>
+                    </select>
+                </div>
+                <div id="results-count-notes" class="results-count" aria-live="polite"></div>
+            </div>
+            
+            <div class="utility-buttons">
+                <button id="random-note-btn" class="utility-btn">🎲 Feeling Lucky?</button>
+                <button id="clear-filters-btn-notes" class="utility-btn">Clear Filters & Search</button>
+            </div>
+        </div>
+
+        <div class="item-grid" id="notes-grid" role="region" aria-live="polite">
+            <!-- Note cards are dynamically inserted here -->
+        </div>
+        
+        <div id="loading-indicator-notes" class="loading-indicator">
+            <div class="spinner" role="status" aria-label="Loading notes..."></div>
+        </div>
+        
+        <p id="no-results-notes" class="no-results" style="display: none; text-align: center; font-size: 1.2em;">No notes found matching your criteria. Try a different search or filter.</p>
+    </main>
+
+    <footer>
+        <p class="warning">
+         MADE BY MUHAMMAD FAIZAN AHMED FOR PAKISTANI STUDENTS
+        </p>
+        <p>&copy; 2023 9th Class Digital Library. All rights reserved.</p>
+    </footer>
+
+    <a href="#page-top" id="back-to-top-btn" aria-label="Back to top">↑</a>
+
+
+    <script>
+        // Self-executing anonymous function
+        (function() {
+            
+            const App = {
+                
+                // --- 1. PROPERTIES ---
+                bookData: [
+                    { title: "Biology", subtitle: "The Study of Life", category: "science", link: "https://drive.google.com/file/d/1duFba-g0vUhPDZGorSLN8Bo4hGGxkyIa/preview", imageUrl: "https://i.supaimg.com/fad5b241-9fd3-46a1-8f9b-33c3c3b4c300.png" },
+                    { title: "Chemistry", subtitle: "Elements & Reactions", category: "science", link: "https://drive.google.com/file/d/1PFD56PQP5-CidRy1h6FrbLBie-5OqQ_H/preview", imageUrl: "https://i.supaimg.com/5c54fe40-cfd8-4fdf-8708-55f850529236.png" },
+                    { title: "Computer Science", subtitle: "Exploring the Digital World", category: "science", link: "https://drive.google.com/file/d/1NOxw1EZDA9Xn9x3JNjYvyptIh46m_XKK/preview?usp=drivesdk", imageUrl: "https://i.supaimg.com/11f87fac-ac32-4ba5-98e9-e1de2b44d1b5.png" },
+                    { title: "Mathematics", subtitle: "Numbers, Shapes & Logic", category: "science", link: "https://drive.google.com/file/d/1Ew0zV5cmM7oQaHlwMI7UHHaxMf2eC-yw/preview?usp=drivesdk", imageUrl: "https://i.supaimg.com/8db503c6-bb95-449e-8333-275bccc96325.png" },
+                    { title: "English", subtitle: "Language & Literature", category: "language", link: "https://drive.google.com/file/d/1LDz5JzEYmmMXhvsmP1TWQxNB8jM15f35/preview", imageUrl: "https://i.supaimg.com/4604b4dc-8361-45aa-929c-9f363bf1c27e.png" },
+                    { title: "Physics", subtitle: "The Laws of Nature", category: "science", link: "https://drive.google.com/file/d/1UuwOrqtaT6mYKRHKpC5LtvTBADkUKtY6/preview", imageUrl: "https://i.supaimg.com/f3e48bfc-8658-4cfc-9594-af93b6f27e7b.png" },
+                    { title: "Islamiat", subtitle: "Principles & Teachings", category: "social", link: "https://drive.google.com/file/d/1CFNPprLxIEfoLoiaGJnpjnr0k8fWCAFm/preview", imageUrl: "https://i.supaimg.com/d6a21f5e-09cd-4e0b-9fe1-b72d09445cb6.png" },
+                    { title: "Tarjuma tul Quran", subtitle: "Translation & Teachings", category: "social", link: "https://drive.google.com/file/d/1V7Sf3L8VH3UhVarYxERDyIpxLA9jRNrc/preview", imageUrl: "https://i.supaimg.com/1a6270e2-11d0-45f6-8675-1928e86838c1.png" },
+                    { title: "Pak Study Urdu", subtitle: "History & Culture of Pakistan", category: "social", link: "https://drive.google.com/file/d/10MHUgdxDnnvnfgNIOhJyASjToSuT1n4-/preview?usp=drivesdk", imageUrl: "https://i.supaimg.com/a381941d-e406-4927-809b-1327cf48d772.png" },
+                    { title: "Pak Study English", subtitle: "History & Culture of Pakistan", category: "social", link: "https://google.com/file/d/1q1shOcrP2h0biBs4QJkzidxw025NQYfN/preview?usp=drivesdk", imageUrl: "https://i.supaimg.com/d44b8f8a-6a80-4c56-bcd7-f2c9ef2956ab.png" },
+                    { title: "Economics", subtitle: "Principles of Wealth & Trade", category: "social", link: "https://drive.google.com/file/d/1ZT7R55kUMthXxkF5JR2UrwhHr4hdnEdh/preview?usp=drivesdk", imageUrl: "https://i.supaimg.com/5873679f-7f1f-478b-9cf9-86c346f80b1c.png" },
+                    { title: "Urdu", subtitle: "Language, Poetry & Prose", category: "language", link: "https://drive.google.com/file/d/1CQ4T1tqJ0WhGRKOcEN8n6Mt_lnoeNr_b/preview", imageUrl: "https://i.supaimg.com/c9de433e-f22f-40f5-b173-910eb80ff706.png" }
+                ],
+
+                noteData: [
+                    // Biology Notes
+                    { title: "Biology Ch 1", category: "biology", link: "https://drive.google.com/file/d/15hLZZQc3jAnmb0J7-2HOBKeJVhrlfvkg/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    { title: "Biology Ch 2", category: "biology", link: "https://drive.google.com/file/d/1l0xw0q4DocNr5-8-cQAqn6bYGwoRBX5F/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    { title: "Biology Ch 3", category: "biology", link: "https://drive.google.com/file/d/1-pLwn2Z5apyl-qLHRpLIbJ4JpYAkv9Kb/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    { title: "Biology Ch 4", category: "biology", link: "https://drive.google.com/file/d/1Y0jxryW-OglDokn_WreGzEglWPayy1Qc/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    { title: "Biology Ch 5", category: "biology", link: "https://drive.google.com/file/d/1KUnH-vJkKwIHkGNjG280yGndcJyHHQZD/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    { title: "Biology Ch 6", category: "biology", link: "https://drive.google.com/file/d/1WRNp_ASzGZyrRBnQjYq_jTvalvui9lwj/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    { title: "Biology Ch 7", category: "biology", link: "https://drive.google.com/file/d/13MRrt99gF5Rl3rqnyXObZMN-cl-5FnP9/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    { title: "Biology Ch 8", category: "biology", link: "https://drive.google.com/file/d/11_u6-fZofTiMqO3GCkCkNkwFeKXHekLg/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    { title: "Biology Ch 9", category: "biology", link: "https://drive.google.com/file/d/1yJigAFVK_rehoSNvagKcvA3WVt-anvI6/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    { title: "Biology Ch 10", category: "biology", link: "https://drive.google.com/file/d/1oBrsVwREGIFsF7DC3dBvkMs8cqRsSizL/preview", imageUrl: "https://i.supaimg.com/c96afd82-a003-415d-aa3c-fa12393ac7de.jpg" },
+                    // Chemistry Notes
+                    { title: "Chem Ch 1", category: "chemistry", link: "https://drive.google.com/file/d/16M6DHxheApRg342BPsg52qskDttqazUR/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 2", category: "chemistry", link: "https://drive.google.com/file/d/1AisI4TVhwq3r07CJ-rWM9IVaYO-baJ87/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 3", category: "chemistry", link: "https://drive.google.com/file/d/1gTe0cQkOMOe3amPHMnm1Txda21Hz3EdA/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 4", category: "chemistry", link: "https://drive.google.com/file/d/1gTe0cQkOMOe3amPHMnm1Txda21Hz3EdA/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 5", category: "chemistry", link: "https://drive.google.com/file/d/1kpzXkkXLELcfkrHxmer2GAuutFT2zVcR/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 6", category: "chemistry", link: "https://drive.google.com/file/d/1xzJrBPh-FvzVA9bYZXdcS_PyFzY01POy/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 7", category: "chemistry", link: "https://drive.google.com/file/d/15s_3CPPvMJTMk1AEFiRe0IF5y8WyeKx9/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 8", category: "chemistry", link: "https://drive.google.com/file/d/104RWTeNks8dxHPZI-t-T3M7DKxfiGKST/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 9", category: "chemistry", link: "https://drive.google.com/file/d/1bq6rL9Riq91zCdg6-kiu0k0oHSTjyxnW/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 10", category: "chemistry", link: "https://drive.google.com/file/d/13YGHp_9F4nZ7ia8hhmIusful3o5_M2Ir/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 11", category: "chemistry", link: "https://drive.google.com/file/d/1M3T48wR-9J-pXiBbEEEVm3aLXtZ5ZbaC/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 12", category: "chemistry", link: "https://drive.google.com/file/d/1S-jwhIig8yiQIUAXSzeIXsrws4YK90gi/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 13", category: "chemistry", link: "https://drive.google.com/file/d/1ywRqFLec8okZbMwhvoswFHw4FnTl4dq3/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 14", category: "chemistry", link: "https://drive.google.com/file/d/1A0RGnyq6SqieXI-2gqGNqFE9SU-EuqCn/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 15", category: "chemistry", link: "https://drive.google.com/file/d/1A0RGnyq6SqieXI-2gqGNqFE9SU-EuqCn/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 16", category: "chemistry", link: "https://drive.google.com/file/d/10_t-DkVDLIRecEJOw1XLqkB2FaW4aGVG/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 17", category: "chemistry", link: "https://drive.google.com/file/d/1t5pl_q1aCrCTwR7S5CGVBFJ4Ea0brfxk/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 18", category: "chemistry", link: "https://drive.google.com/file/d/1NdwGpNRtdKAl5wxyXQWsbLZNlyXxOmS-/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    { title: "Chem Ch 19", category: "chemistry", link: "https://drive.google.com/file/d/1slGy_9lgtINusTZVtUTPS9OYNecIEbLi/preview", imageUrl: "https://i.supaimg.com/c152e50b-016f-4ecf-8c76-04d7814f86e8.png" },
+                    // Physics Notes
+                    { title: "Physics Ch 1", category: "physics", link: "https://drive.google.com/file/d/1aUTgI_nPpelB6shDfSbAUgjI713h9kkz/preview", imageUrl: "https://i.supaimg.com/a867a705-bf0e-422b-a94a-a1ffe91c3b30.png" },
+                    { title: "Physics Ch 2", category: "physics", link: "https://drive.google.com/file/d/1R9s7Rbu4P90w3N9hiYwXo2e74Uh4QYwJ/preview", imageUrl: "https://i.supaimg.com/a867a705-bf0e-422b-a94a-a1ffe91c3b30.png" },
+                    { title: "Physics Ch 3", category: "physics", link: "https://drive.google.com/file/d/1Sc1krac7q7CJp8rkl3iKCWysjQ56j_OP/preview", imageUrl: "https://i.supaimg.com/a867a705-bf0e-422b-a94a-a1ffe91c3b30.png" },
+                    { title: "Physics Ch 4", category: "physics", link: "https://drive.google.com/file/d/165PTi1x1mqqGV8dBaouCMt1DiXPJYcfX/preview", imageUrl: "https://i.supaimg.com/a867a705-bf0e-422b-a94a-a1ffe91c3b30.png" },
+                    { title: "Physics Ch 5", category: "physics", link: "https://drive.google.com/file/d/1d1-viXVXQwZCJBfBkiJWeH65dwbR2Ybf/preview", imageUrl: "https://i.supaimg.com/a867a705-bf0e-422b-a94a-a1ffe91c3b30.png" },
+                    { title: "Physics Ch 6", category: "physics", link: "https://drive.google.com/file/d/16FSfL2oSmnxy04-0wLaV2npsr9rlauGh/preview", imageUrl: "https://i.supaimg.com/a867a705-bf0e-422b-a94a-a1ffe91c3b30.png" },
+                    { title: "Physics Ch 7", category: "physics", link: "https://drive.google.com/file/d/1nFiFhmMyuWQ3Rnxt9kjRU8UmNZOF0Uf0/preview", imageUrl: "https://i.supaimg.com/a867a705-bf0e-422b-a94a-a1ffe91c3b30.png" },
+                    { title: "Physics Ch 8", category: "physics", link: "https://drive.google.com/file/d/1gRAcky4PZWsZcJz4gCKt03TAiFuIWZGU/preview", imageUrl: "https://i.supaimg.com/a867a705-bf0e-422b-a94a-a1ffe91c3b30.png" },
+                    { title: "Physics Ch 9", category: "physics", link: "https://drive.google.com/file/d/1gRAcky4PZWsZcJz4gCKt03TAiFuIWZGU/preview", imageUrl: "https://i.supaimg.com/a867a705-bf0e-422b-a94a-a1ffe91c3b30.png" },
+                    // Math Notes
+                    { title: "Math Ch 1", category: "math", link: "https://drive.google.com/file/d/1OsG5wdvE230F8bMvWfrjs8UzfG3hx_B0/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 2", category: "math", link: "https://drive.google.com/file/d/1ult-33kTPoNPX5N-B3L9KIwbc-RcOJlO/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 3", category: "math", link: "https://drive.google.com/file/d/18_owPCtvdEw41rxqWNh2TH_aoJ6RXIPA/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 4", category: "math", link: "https://drive.google.com/file/d/1kyuyN40MTeBZevuOJawnUJku8RgBVhuT/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 5", category: "math", link: "https://drive.google.com/file/d/1oY1Y6Tb9oGo-qP57eUQ68K3qEIdAXmFT/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 6", category: "math", link: "https://drive.google.com/file/d/13rnVP7ogIsHK2ww0ph6gg9XUXQiifJT_/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 7", category: "math", link: "https://drive.google.com/file/d/137FOk-l7Hs2kPFeql4MMJaL_2GOp8C0i/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 8", category: "math", link: "https://drive.google.com/file/d/15nMazEc6k8AB8_GXohDSPOIXU7KChanu/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 9", category: "math", link: "https://drive.google.com/file/d/15nMazEc6k8AB8_GXohDSPOIXU7KChanu/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 10", category: "math", link: "https://drive.google.com/file/d/195oxJXjr90b4z8zRPZRw17VXUHXJWnrV/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    { title: "Math Ch 11", category: "math", link: "https://drive.google.com/file/d/1abu4FGeD_V1AMTNH74y5r5zkFJjy7df4/preview", imageUrl: "https://i.supaimg.com/e30bb2ef-80cb-4607-974a-ede16bf3a07c.png" },
+                    // Computer Notes
+                    { title: "Computer Ch 1", category: "computer", link: "https://drive.google.com/file/d/1_UzGHZMUi2R746TZB4haxti4bE4mpqDs/preview", imageUrl: "https://i.supaimg.com/9ae27750-1671-4104-804f-7adf35bd13cb.jpg" },
+                    { title: "Computer Ch 2", category: "computer", link: "https://drive.google.com/file/d/1F_6rTlYkEFEaY1kOSWk6n-WLKFsK2wSe/preview", imageUrl: "https://i.supaimg.com/9ae27750-1671-4104-804f-7adf35bd13cb.jpg" },
+                    { title: "Computer Ch 3", category: "computer", link: "https://drive.google.com/file/d/1YGe5icSXk82KVP4yBoNk0Ns_vRf6OC4b/preview", imageUrl: "https://i.supaimg.com/9ae27750-1671-4104-804f-7adf35bd13cb.jpg" },
+                    { title: "Computer Ch 4", category: "computer", link: "https://drive.google.com/file/d/1VJ4CM8iWL5wKrw1e0Buh9x8QLQk9uEI6/preview", imageUrl: "https://i.supaimg.com/9ae27750-1671-4104-804f-7adf35bd13cb.jpg" },
+                    { title: "Computer Ch 5", category: "computer", link: "https://drive.google.com/file/d/19GAi4IKIGAUgOT3g2CMvOpALUjXV8t-1/preview", imageUrl: "https://i.supaimg.com/9ae27750-1671-4104-804f-7adf35bd13cb.jpg" },
+                    { title: "Computer Ch 6", category: "computer", link: "https://drive.google.com/file/d/155gLhHIV0js6IDTJIS1o0hHV_QNlZE2V/preview", imageUrl: "https://i.supaimg.com/9ae27750-1671-4104-804f-7adf35bd13cb.jpg" },
+                    { title: "Computer Ch 7", category: "computer", link: "https://drive.google.com/file/d/13lBikNJ5KmrRMohQaV-8QfPU7y5FZk8u/preview", imageUrl: "https://i.supaimg.com/9ae27750-1671-4104-804f-7adf35bd13cb.jpg" },
+                     // English Notes
+                    { title: "English Ch 1", category: "english", link: "https://drive.google.com/file/d/1SMXmhMgsNqbAKEOpBQVBpbo2ek3jrRfR/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 2", category: "english", link: "https://drive.google.com/file/d/1ox8M-FS1kHTLvmu34qO9lBPmy_9LOoSb/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 3", category: "english", link: "https://drive.google.com/file/d/1keVLWuDptnhWJmgCtfKKTxMzhRiffPG5/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 4", category: "english", link: "https://drive.google.com/file/d/1Gj0ZI0c7WmmCaYZwsc0oy6kpSFJwR9kx/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 5", category: "english", link: "https://drive.google.com/file/d/1fI-aN9njrmLy45k2bFqrmVSmO37HhtLS/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 6", category: "english", link: "https://drive.google.com/file/d/1aTSCdrBgsR0_MOb_DeMe0T0APNDIiBHi/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 7", category: "english", link: "https://drive.google.com/file/d/1cME26NtbXDSx5FX2MWUHXnUSUeXhStIv/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 8", category: "english", link: "https://drive.google.com/file/d/1FstbpFHiZLtjCZQw0pHiDY3SYwbdABDw/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 9", category: "english", link: "https://drive.google.com/file/d/1rPRH91KhoynBYzCPvO8gLT-zi9rBVE6w/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 10", category: "english", link: "https://drive.google.com/file/d/1C7qIi6VCgLTjiKa6UxStHak5dsdWD3vm/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 11", category: "english", link: "https://drive.google.com/file/d/1zGi5NfERhppKagbSC2adMn9b8W2Y01fp/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    { title: "English Ch 12", category: "english", link: "https://drive.google.com/file/d/1xdyaTeI26-L-LBJYJ4MRHKLu7RpvQYEg/preview", imageUrl: "https://i.supaimg.com/d5b4fb76-7b12-46a2-95eb-c5af6c75c886.jpg" },
+                    // Islamiat Notes
+                    { title: "Islamiat Ch 1", category: "islamiat", link: "https://drive.google.com/file/d/10Dxxpg62mN6AatJ2DgKev11AblqXt4-C/preview", imageUrl: "https://i.supaimg.com/1d113409-400a-48e5-9d71-8959b79acd22.png" },
+                    { title: "Islamiat Ch 2", category: "islamiat", link: "https://drive.google.com/file/d/1dhJA1xk4CQa1U0BtEMwGbJ87kD794DHw/preview", imageUrl: "https://i.supaimg.com/1d113409-400a-48e5-9d71-8959b79acd22.png" },
+                    { title: "Islamiat Ch 3", category: "islamiat", link: "https://drive.google.com/file/d/1EcEMTHKV_MS4iKdIfnCqeVxfHxFTi_H6/preview", imageUrl: "https://i.supaimg.com/1d113409-400a-48e5-9d71-8959b79acd22.png" },
+                    { title: "Islamiat Ch 4", category: "islamiat", link: "https://drive.google.com/file/d/1TwsuDSFgnmJedKs6LA5pKmKdNVlLlXhv/preview", imageUrl: "https://i.supaimg.com/1d113409-400a-48e5-9d71-8959b79acd22.png" },
+                    { title: "Islamiat Ch 5", category: "islamiat", link: "https://drive.google.com/file/d/1T7-aegVNUA-fgrIqxn__nVCj2oant1-4/preview", imageUrl: "https://i.supaimg.com/1d113409-400a-48e5-9d71-8959b79acd22.png" },
+                    { title: "Islamiat Ch 6", category: "islamiat", link: "https://drive.google.com/file/d/1N4nEpPMwdwScJc310d5r6I7bXg9dbXl3/preview", imageUrl: "https://i.supaimg.com/1d113409-400a-48e5-9d71-8959b79acd22.png" },
+                    // Pak Studies Notes
+                    { title: "Pak Studies (Urdu) Ch 1", category: "pak-studies", link: "https://drive.google.com/file/d/1St1Er60p2uA0nFzRxkBWq4w5THxYooNE/preview", imageUrl: "https://i.supaimg.com/51cb18f1-c447-4e78-9627-ee351578eb98.jpg" },
+                    { title: "Pak Studies (Urdu) Ch 2", category: "pak-studies", link: "https://drive.google.com/file/d/1dQNR1o3lOh5fMjVwMapFgtbgonFqZJSK/preview", imageUrl: "https://i.supaimg.com/51cb18f1-c447-4e78-9627-ee351578eb98.jpg" },
+                    { title: "Pak Studies (Urdu) Ch 3", category: "pak-studies", link: "https://drive.google.com/file/d/1G_ScybtYoKfiYyphOiS5aEJezWCKuj16/preview", imageUrl: "https://i.supaimg.com/51cb18f1-c447-4e78-9627-ee351578eb98.jpg" },
+                    { title: "Pak Studies (Urdu) Ch 4", category: "pak-studies", link: "https://drive.google.com/file/d/1w67BDTuLVMrSeCwdGR9AVZJbkboYF1PD/preview", imageUrl: "https://i.supaimg.com/51cb18f1-c447-4e78-9627-ee351578eb98.jpg" },
+                    { title: "Pak Studies (Eng) Ch 1", category: "pak-studies", link: "https://drive.google.com/file/d/1ZpVBqTAdmzhzGuJ281Y3SU26Ps3g2LYa/preview", imageUrl: "https://i.supaimg.com/51cb18f1-c447-4e78-9627-ee351578eb98.jpg" },
+                    { title: "Pak Studies (Eng) Ch 2", category: "pak-studies", link: "https://drive.google.com/file/d/19oThZmwCjXrTruP1JIf1NMqXxYqZ2tpJ/preview", imageUrl: "https://i.supaimg.com/51cb18f1-c447-4e78-9627-ee351578eb98.jpg" },
+                    { title: "Pak Studies (Eng) Ch 3", category: "pak-studies", link: "https://drive.google.com/file/d/1s6ongSro18DzmREib_37lcxzdId3rV-u/preview", imageUrl: "https://i.supaimg.com/51cb18f1-c447-4e78-9627-ee351578eb98.jpg" },
+                    { title: "Pak Studies (Eng) Ch 4", category: "pak-studies", link: "https://drive.google.com/file/d/1pclkS_bP8aFh7grF5S0BLYwdP3PncnaK/preview", imageUrl: "https://i.supaimg.com/51cb18f1-c447-4e78-9627-ee351578eb98.jpg" },
+                    // Urdu Notes
+                    { title: "Urdu Ch 1", category: "urdu", link: "https://drive.google.com/file/d/1YzEcLQ81zdLNxBYTbdenHfK1tGGGmqGu/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 2", category: "urdu", link: "https://drive.google.com/file/d/1iJg--k4u5DSUFvKdhe2X1vah0laGr5yG/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 3", category: "urdu", link: "https://drive.google.com/file/d/161T_PDIRM8P0c_k0jj6qcwLc82FYhkdc/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 4", category: "urdu", link: "https://drive.google.com/file/d/187PBUkCAGR8dHSP3Rjd8qAH5Q5kWTr-C/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 5", category: "urdu", link: "https://drive.google.com/file/d/1FO8cEDFh7rLSILaNvETIut2Vsd7s8fSH/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 6", category: "urdu", link: "https://drive.google.com/file/d/1LVWjU-DpUdFYAvU-I-sOj9qXFfGRfyFQ/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 7", category: "urdu", link: "https://drive.google.com/file/d/1idKiqdlVLNPcuhf_tQfgvngs-k51_oXE/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 8", category: "urdu", link: "https://drive.google.com/file/d/1BuFvRrgVYsdjxu0_MnNSX4yhWthsjNLa/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 9", category: "urdu", link: "https://drive.google.com/file/d/1qjrQA7WCX5Fw2HnSEvpVJWfZFzCm7X51/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 10", category: "urdu", link: "https://drive.google.com/file/d/1qGn4hfJ74Cwj0OnBAwRIFRcj6coCl2Yh/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 11", category: "urdu", link: "https://drive.google.com/file/d/1fc76gv261U45RO3dzNkDGtIcfxH7k7XL/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 12", category: "urdu", link: "https://drive.google.com/file/d/1-60ouUOEGiOeJOFQkOShZLHDlWUnjyMz/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 13", category: "urdu", link: "https://drive.google.com/file/d/1AQyVlLun76oZYbGtXGnjSRLLknOb2_ro/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 14", category: "urdu", link: "https://drive.google.com/file/d/1H9s4Jm5eKlUDKQwj343-ySCsp3dNkjX4/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 15", category: "urdu", link: "https://drive.google.com/file/d/1nQIWxlXtwReAYtZ8rDsRiBvdnZd9ywsK/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 16", category: "urdu", link: "https://drive.google.com/file/d/1laR_-M5DqZBirgtqeXniA6yZazuC66uv/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 17", category: "urdu", link: "https://drive.google.com/file/d/1zYZVsDTVWfJBZM2J0qld1f35hBl2znJi/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 18", category: "urdu", link: "https://drive.google.com/file/d/1_Hdruh6p25FyIGx2gjmE8Ew7VHic-L7y/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" },
+                    { title: "Urdu Ch 19", category: "urdu", link: "https://drive.google.com/file/d/1zZuN3_3HOy-iokuQt-54OirjlizvgeKT/preview", imageUrl: "https://i.supaimg.com/457d5905-8f33-4b2b-9fac-573eff97526f.jpg" }
+                ],
+
+                elements: {
+                    // General
+                    themeToggle: document.getElementById('theme-toggle'),
+                    backToTopBtn: document.getElementById('back-to-top-btn'),
+                    menuToggle: document.getElementById('menu-toggle'),
+                    navLinks: document.getElementById('nav-links'),
+                    navLinkItems: document.querySelectorAll('.nav-link-item'),
+                    switchViewLink: document.getElementById('switch-view-link'),
+                    quickSubjectsBar: document.getElementById('quick-subjects'),
+                    closeQuickSubjectsBtn: document.getElementById('close-quick-subjects'),
+                    quickSubjectLinks: document.querySelectorAll('.quick-subject-link'),
+                    allBooksLink: document.getElementById('all-books-link'),
+                    
+                    // Books Section
+                    booksSection: document.getElementById('books-section'),
+                    bookGrid: document.getElementById('book-grid'),
+                    noResultsMessageBooks: document.getElementById('no-results-books'),
+                    searchBarBooks: document.getElementById('search-bar-books'),
+                    filterButtonsBooks: document.querySelectorAll('#books-section .filter-btn'),
+                    sortSelectBooks: document.getElementById('sort-select-books'),
+                    resultsCountBooks: document.getElementById('results-count-books'),
+                    clearFiltersBtnBooks: document.getElementById('clear-filters-btn-books'),
+                    loadingIndicatorBooks: document.getElementById('loading-indicator-books'),
+                    randomBookBtn: document.getElementById('random-book-btn'),
+
+                    // Notes Section
+                    notesSection: document.getElementById('notes-section'),
+                    notesGrid: document.getElementById('notes-grid'),
+                    noResultsMessageNotes: document.getElementById('no-results-notes'),
+                    searchBarNotes: document.getElementById('search-bar-notes'),
+                    filterButtonsNotes: document.querySelectorAll('#notes-section .filter-btn'),
+                    sortSelectNotes: document.getElementById('sort-select-notes'),
+                    resultsCountNotes: document.getElementById('results-count-notes'),
+                    clearFiltersBtnNotes: document.getElementById('clear-filters-btn-notes'),
+                    loadingIndicatorNotes: document.getElementById('loading-indicator-notes'),
+                    randomNoteBtn: document.getElementById('random-note-btn'),
+                },
+
+                observers: { cardObserver: null, navObserver: null },
+                filterTimer: null,
+                filterDelay: 300,
+
+                // --- 2. INITIALIZATION ---
+                init() {
+                    this.initTheme();
+                    this.initCardObserver();
+                    this.initNavObserver();
+                    this.initQuickSubjects();
+                    this.registerEventListeners();
+                    this.loadState(); 
+                    this.filterAndRenderBooks(true);
+                },
+
+                // --- 3. EVENT LISTENERS ---
+                registerEventListeners() {
+                    // General Listeners
+                    this.elements.themeToggle.addEventListener('change', this.handleThemeToggle.bind(this));
+                    window.addEventListener('scroll', this.handleScroll.bind(this));
+                    this.elements.menuToggle.addEventListener('click', this.handleMenuToggle.bind(this));
+                    this.elements.navLinkItems.forEach(link => link.addEventListener('click', this.closeMobileMenu.bind(this)));
+                    this.elements.closeQuickSubjectsBtn.addEventListener('click', this.handleCloseQuickSubjects.bind(this));
+                    this.elements.quickSubjectLinks.forEach(link => link.addEventListener('click', this.handleQuickSubjectClick.bind(this)));
+                    this.elements.switchViewLink.addEventListener('click', this.handleViewSwitch.bind(this));
+                    this.elements.allBooksLink.addEventListener('click', () => this.switchToView('books'));
+                    document.addEventListener('keydown', this.handleKeyboardTrap.bind(this));
+
+                    // Books Section Listeners
+                    this.elements.searchBarBooks.addEventListener('input', () => this.filterAndRenderBooks());
+                    this.elements.sortSelectBooks.addEventListener('change', () => this.filterAndRenderBooks());
+                    this.elements.filterButtonsBooks.forEach(button => button.addEventListener('click', (e) => this.handleCategoryClick(e, 'books')));
+                    this.elements.clearFiltersBtnBooks.addEventListener('click', this.handleClearFilters.bind(this, 'books')); 
+                    this.elements.bookGrid.addEventListener('mousemove', this.handleGridMouseMove.bind(this));
+                    this.elements.randomBookBtn.addEventListener('click', () => this.handleRandomItem('books'));
+                    
+                    // Notes Section Listeners
+                    this.elements.searchBarNotes.addEventListener('input', () => this.filterAndRenderNotes());
+                    this.elements.sortSelectNotes.addEventListener('change', () => this.filterAndRenderNotes());
+                    this.elements.filterButtonsNotes.forEach(button => button.addEventListener('click', (e) => this.handleCategoryClick(e, 'notes')));
+                    this.elements.clearFiltersBtnNotes.addEventListener('click', this.handleClearFilters.bind(this, 'notes'));
+                    this.elements.notesGrid.addEventListener('mousemove', this.handleGridMouseMove.bind(this));
+                    this.elements.randomNoteBtn.addEventListener('click', () => this.handleRandomItem('notes'));
+                },
+
+                // --- 4. CORE METHODS (BOOKS) ---
+                filterAndRenderBooks(skipAnimation = false) {
+                    const searchTerm = this.elements.searchBarBooks.value;
+                    const category = this.getActiveCategory('books');
+                    const sortValue = this.elements.sortSelectBooks.value;
+                    this.saveState(searchTerm, category, sortValue);
+                    
+                    this.filterAndRender({
+                        data: this.bookData,
+                        searchTerm, category, sortValue, skipAnimation,
+                        gridEl: this.elements.bookGrid,
+                        loadingEl: this.elements.loadingIndicatorBooks,
+                        noResultsEl: this.elements.noResultsMessageBooks,
+                        resultsCountEl: this.elements.resultsCountBooks,
+                        cardCreator: this.createBookCard.bind(this)
+                    });
+                },
+                
+                // --- 4. CORE METHODS (NOTES) ---
+                filterAndRenderNotes(skipAnimation = false) {
+                    const searchTerm = this.elements.searchBarNotes.value;
+                    const category = this.getActiveCategory('notes');
+                    const sortValue = this.elements.sortSelectNotes.value;
+                    
+                     this.filterAndRender({
+                        data: this.noteData,
+                        searchTerm, category, sortValue, skipAnimation,
+                        gridEl: this.elements.notesGrid,
+                        loadingEl: this.elements.loadingIndicatorNotes,
+                        noResultsEl: this.elements.noResultsMessageNotes,
+                        resultsCountEl: this.elements.resultsCountNotes,
+                        cardCreator: this.createNoteCard.bind(this)
+                    });
+                },
+
+                // --- GENERIC RENDERER ---
+                filterAndRender(config) {
+                    clearTimeout(this.filterTimer);
+                    config.gridEl.classList.add('grid-filtering');
+                    config.loadingEl.classList.add('visible');
+                    
+                    this.filterTimer = setTimeout(() => {
+                        const lowerSearchTerm = config.searchTerm.toLowerCase();
+                        let filteredItems = config.data.filter(item => {
+                            const title = item.title || '';
+                            const subtitle = item.subtitle || '';
+                            const category = item.category || '';
+                            const matchesSearch = (title.toLowerCase().includes(lowerSearchTerm) || subtitle.toLowerCase().includes(lowerSearchTerm) || category.toLowerCase().includes(lowerSearchTerm));
+                            const matchesCategory = (config.category === 'all' || item.category === config.category);
+                            return matchesSearch && matchesCategory;
+                        });
+                        
+                        if (config.sortValue === 'a-z') {
+                            filteredItems.sort((a, b) => a.title.localeCompare(b.title));
+                        } else if (config.sortValue === 'z-a') {
+                            filteredItems.sort((a, b) => b.title.localeCompare(a.title));
+                        }
+                        
+                        this.renderItems(filteredItems, config.gridEl, config.cardCreator);
+                        this.updateResultsCount(filteredItems.length, config.data.length, config.resultsCountEl);
+                        
+                        config.gridEl.classList.remove('grid-filtering');
+                        config.loadingEl.classList.remove('visible');
+                    }, config.skipAnimation ? 0 : this.filterDelay);
+                },
+
+                renderItems(itemsToRender, gridElement, cardCreator) {
+                    gridElement.innerHTML = '';
+                    const noResultsEl = gridElement.nextElementSibling.nextElementSibling; // Find corresponding no-results p
+                    noResultsEl.style.display = itemsToRender.length === 0 ? 'block' : 'none';
+
+                    if (itemsToRender.length > 0) {
+                        const fragment = document.createDocumentFragment();
+                        itemsToRender.forEach(item => {
+                            const card = cardCreator(item);
+                            fragment.appendChild(card);
+                            this.observers.cardObserver.observe(card);
+                        });
+                        gridElement.appendChild(fragment);
+                    }
+                },
+                
+                createBookCard(book) {
+                    const card = document.createElement('a');
+                    card.className = 'item-card';
+                    card.href = book.link;
+                    card.target = '_blank';
+                    card.rel = 'noopener noreferrer';
+                    card.setAttribute('data-title', book.title);
+                    card.setAttribute('data-category', book.category);
+                    card.innerHTML = `
+                        <div class="item-image-container"><img src="${book.imageUrl}" alt="Cover of ${book.title} book" class="item-image" loading="lazy" style="object-fit: contain;"></div>
+                        <h3 class="item-title">${book.title}</h3>
+                        <p class="item-subtitle">${book.subtitle}</p>
+                        <span class="view-button">View Book</span>`;
+                    return card;
+                },
+
+                createNoteCard(note) {
+                    const card = document.createElement('a');
+                    card.className = 'item-card';
+                    card.href = note.link;
+                    card.target = '_blank';
+                    card.rel = 'noopener noreferrer';
+                    card.setAttribute('data-title', note.title);
+                    card.setAttribute('data-category', note.category);
+                    card.innerHTML = `
+                        <div class="item-image-container"><img src="${note.imageUrl}" alt="${note.category} icon" class="item-image" loading="lazy"></div>
+                        <h3 class="item-title">${note.title}</h3>
+                        <p class="item-subtitle">${note.category.charAt(0).toUpperCase() + note.category.slice(1).replace('-', ' ')} Notes</p>
+                        <span class="view-button">View Notes</span>`;
+                    return card;
+                },
+                
+                updateResultsCount(count, total, element) {
+                    element.textContent = (count === total) ? `Showing all ${total} items` : `Showing ${count} of ${total} items`;
+                },
+
+                // --- 5. EVENT HANDLERS ---
+                handleThemeToggle() {
+                    const isDark = this.elements.themeToggle.checked;
+                    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                },
+                
+                handleScroll() {
+                    this.elements.backToTopBtn.classList.toggle('visible', window.scrollY > 300);
+                },
+                
+                handleCategoryClick(event, type) {
+                    const buttons = (type === 'books') ? this.elements.filterButtonsBooks : this.elements.filterButtonsNotes;
+                    buttons.forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.setAttribute('aria-pressed', 'false');
+                    });
+                    const clickedButton = event.currentTarget;
+                    clickedButton.classList.add('active');
+                    clickedButton.setAttribute('aria-pressed', 'true');
+                    
+                    if (type === 'books') this.filterAndRenderBooks();
+                    else this.filterAndRenderNotes();
+                },
+                
+                handleClearFilters(type) {
+                    const searchBar = (type === 'books') ? this.elements.searchBarBooks : this.elements.searchBarNotes;
+                    const sortSelect = (type === 'books') ? this.elements.sortSelectBooks : this.elements.sortSelectNotes;
+                    const filterButtons = (type === 'books') ? this.elements.filterButtonsBooks : this.elements.filterButtonsNotes;
+
+                    searchBar.value = '';
+                    sortSelect.value = 'default';
+                    filterButtons.forEach(btn => {
+                        const isActive = btn.dataset.category === 'all';
+                        btn.classList.toggle('active', isActive);
+                        btn.setAttribute('aria-pressed', isActive);
+                    });
+                    if (type === 'books') {
+                         localStorage.removeItem('filterState');
+                         this.filterAndRenderBooks();
+                    } else {
+                        this.filterAndRenderNotes();
+                    }
+                    searchBar.focus();
+                },
+
+                handleMenuToggle() {
+                    const isOpen = this.elements.navLinks.classList.toggle('open');
+                    this.elements.menuToggle.classList.toggle('open', isOpen);
+                    this.elements.menuToggle.setAttribute('aria-expanded', isOpen);
+                    if (isOpen) this.elements.navLinkItems[0].focus();
+                },
+
+                handleKeyboardTrap(e) {
+                    if (e.key === 'Tab' && this.elements.navLinks.classList.contains('open')) {
+                        const focusableElements = Array.from(this.elements.navLinks.querySelectorAll('a, button, input'));
+                        const firstElement = focusableElements[0];
+                        const lastElement = focusableElements[focusableElements.length - 1];
+
+                        if (e.shiftKey) { // Shift + Tab
+                            if (document.activeElement === firstElement) {
+                                lastElement.focus();
+                                e.preventDefault();
+                            }
+                        } else { // Tab
+                            if (document.activeElement === lastElement) {
+                                firstElement.focus();
+                                e.preventDefault();
+                            }
+                        }
+                    }
+                },
+                
+                closeMobileMenu() {
+                    if (window.innerWidth <= 768 && this.elements.navLinks.classList.contains('open')) {
+                        this.elements.navLinks.classList.remove('open');
+                        this.elements.menuToggle.classList.remove('open');
+                        this.elements.menuToggle.setAttribute('aria-expanded', 'false');
+                    }
+                },
+
+                handleGridMouseMove(e) {
+                    const grid = e.currentTarget;
+                    const rect = grid.getBoundingClientRect();
+                    grid.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                    grid.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+                },
+
+                handleCloseQuickSubjects() {
+                    this.elements.quickSubjectsBar.classList.add('hidden');
+                    localStorage.setItem('quickSubjectsHidden', 'true');
+                },
+
+                handleQuickSubjectClick(e) {
+                    this.switchToView('books');
+                    const category = e.currentTarget.dataset.category;
+                    this.elements.filterButtonsBooks.forEach(btn => {
+                        const isActive = btn.dataset.category === category;
+                        btn.classList.toggle('active', isActive);
+                        btn.setAttribute('aria-pressed', isActive);
+                    });
+                    this.filterAndRenderBooks();
+                },
+
+                handleRandomItem(type) {
+                    const grid = (type === 'books') ? this.elements.bookGrid : this.elements.notesGrid;
+                    const visibleCards = grid.querySelectorAll('.item-card');
+                    if (visibleCards.length === 0) return;
+
+                    const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)];
+                    document.querySelectorAll('.item-card.highlight').forEach(c => c.classList.remove('highlight'));
+                    randomCard.classList.add('highlight');
+                    randomCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => randomCard.classList.remove('highlight'), 2500);
+                },
+
+                handleViewSwitch(e) {
+                    e.preventDefault();
+                    const isBooksView = this.elements.booksSection.style.display !== 'none';
+                    this.switchToView(isBooksView ? 'notes' : 'books');
+                },
+
+                switchToView(view) {
+                     const isBooksView = view === 'books';
+                     this.elements.booksSection.style.display = isBooksView ? 'block' : 'none';
+                     this.elements.notesSection.style.display = isBooksView ? 'none' : 'block';
+                     this.elements.switchViewLink.textContent = isBooksView ? 'Switch to Notes' : 'Switch to Books';
+                     this.elements.allBooksLink.href = isBooksView ? '#books-section' : '#notes-section';
+
+                     if (!isBooksView && this.elements.notesGrid.innerHTML === '') {
+                         this.filterAndRenderNotes(true); // First time loading notes
+                     }
+                },
+
+                // --- 6. STATE & OBSERVERS ---
+                saveState(searchTerm, category, sortValue) {
+                    localStorage.setItem('filterState', JSON.stringify({ searchTerm, category, sortValue }));
+                },
+                
+                loadState() {
+                    const savedState = JSON.parse(localStorage.getItem('filterState'));
+                    if (savedState) {
+                        this.elements.searchBarBooks.value = savedState.searchTerm || '';
+                        this.elements.sortSelectBooks.value = savedState.sortValue || 'default';
+                        this.elements.filterButtonsBooks.forEach(btn => {
+                            const isActive = btn.dataset.category === savedState.category;
+                            btn.classList.toggle('active', isActive);
+                            btn.setAttribute('aria-pressed', isActive);
+                        });
+                    }
+                },
+                
+                getActiveCategory(type) {
+                    const sectionId = (type === 'books') ? '#books-section' : '#notes-section';
+                    const activeButton = document.querySelector(`${sectionId} .filter-btn.active`);
+                    return activeButton ? activeButton.dataset.category : 'all';
+                },
+                
+                initTheme() { 
+                    const currentTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                    document.documentElement.setAttribute('data-theme', currentTheme);
+                    if (currentTheme === 'dark') this.elements.themeToggle.checked = true;
+                },
+                initQuickSubjects() { 
+                    if (localStorage.getItem('quickSubjectsHidden') === 'true') {
+                        this.elements.quickSubjectsBar.classList.add('hidden');
+                    }
+                },
+                
+                initCardObserver() {
+                    this.observers.cardObserver = new IntersectionObserver((entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                // Find the parent grid to calculate delay index
+                                const parentGrid = entry.target.closest('.item-grid');
+                                if (!parentGrid) return;
+                                const delay = Array.from(parentGrid.children).indexOf(entry.target) * 50;
+                                entry.target.style.transitionDelay = `${delay}ms`;
+                                entry.target.classList.add('is-visible');
+                                this.observers.cardObserver.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.1 });
+                },
+                
+                initNavObserver() {
+                    this.observers.navObserver = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            const link = this.elements.allBooksLink;
+                            if(link) link.classList.toggle('active-nav', entry.isIntersecting);
+                        });
+                    }, { rootMargin: `-70px 0px 0px 0px`, threshold: 0.1 });
+                    
+                    if(this.elements.booksSection) {
+                        this.observers.navObserver.observe(this.elements.booksSection);
+                    }
+                }
+            };
+
+            document.addEventListener('DOMContentLoaded', () => App.init());
+        })();
+    </script>
+
+</body>
+</html>
